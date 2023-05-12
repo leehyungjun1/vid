@@ -82,17 +82,17 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CustomIconButton(
-                  onPressed: () {},
+                  onPressed: onReversePressed,
                   iconData: Icons.rotate_left,
                 ),
                 CustomIconButton(
-                  onPressed: () {},
+                  onPressed: onPlayPressed,
                   iconData: videoController!.value.isPlaying
                       ? Icons.pause
                       : Icons.play_arrow,
                 ),
                 CustomIconButton(
-                  onPressed: () {},
+                  onPressed: onForwardPressed,
                   iconData: Icons.rotate_right,
                 ),
               ],
@@ -101,5 +101,39 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
         ],
       ),
     );
+  }
+
+  void onReversePressed() {
+    final currentPosition = videoController!.value.position;
+
+    Duration position = const Duration();
+
+    if (currentPosition.inSeconds > 3) {
+      position = currentPosition - const Duration(seconds: 3);
+    }
+
+    videoController!.seekTo(position);
+  }
+
+  void onForwardPressed() {
+    final maxPosition = videoController!.value.duration;
+    final currentPosition = videoController!.value.position;
+
+    Duration position = maxPosition;
+
+    if ((maxPosition - const Duration(seconds: 3)).inSeconds >
+        currentPosition.inSeconds) {
+      position = currentPosition + const Duration(seconds: 3);
+    }
+
+    videoController!.seekTo(position);
+  }
+
+  void onPlayPressed() {
+    if (videoController!.value.isPlaying) {
+      videoController!.pause();
+    } else {
+      videoController!.play();
+    }
   }
 }
